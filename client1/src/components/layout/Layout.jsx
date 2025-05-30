@@ -1,19 +1,30 @@
-// src/components/Layout.jsx
-
-import React from "react";
+import React, { useContext } from "react";
 import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
+import { LayoutContext } from "./LayoutProvider";
+import { Route } from "react-router-dom";
 
 const Layout = ({ children }) => {
-  return (
-    <div className="flex">
-      <Sidebar   />
-      {/* Sidebar: Fixed on the left */}
+  // Correct way to access context values
+  const { darkMode, sidebarOpen } = useContext(LayoutContext);
 
-      {/* Main content area */}
-      <div className="ml-64 flex-1">
-       <Navbar />
-        {/* <main className="p-6 bg-gray-100 min-h-screen">{children}</main> */}
+  return (
+    // Remove the LayoutProvider wrapper - it should be at a higher level
+    <div className={`min-h-screen flex flex-col ${darkMode ? 'dark' : ''}`}>
+      {/* Navbar fixed at top */}
+      <Navbar />
+      
+      <div className="flex flex-1 relative">
+        {/* Sidebar with toggle functionality */}
+        <Sidebar />
+        
+        {/* Main content area with proper spacing */}
+        <main className={`flex-1 transition-all duration-300 bg-gray-50 dark:bg-gray-900 ${
+          sidebarOpen ? 'md:ml-64' : 'ml-0'
+        }`}>
+          
+          <div className="p-6">{children}</div>
+        </main>
       </div>
     </div>
   );
