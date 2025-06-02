@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { setCurrentUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -15,17 +17,16 @@ const LoginForm = () => {
     password: "",
   });
   const [loginMessage, setLoginMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // Check for registration success message
   useEffect(() => {
     if (location.state?.message) {
       setLoginMessage(location.state.message);
-      // Clear the message after 5 seconds
       const timer = setTimeout(() => setLoginMessage(""), 5000);
       return () => clearTimeout(timer);
     }
 
-    // Pre-fill email if coming from registration
     if (location.state?.registeredEmail) {
       setFormData(prev => ({
         ...prev,
@@ -68,23 +69,51 @@ const LoginForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (!validateForm()) return;
 
-    try {
-      // Simulate API call
-      console.log("Login data:", formData);
+    setIsLoading(true);
+    setErrors({ username: "", password: "" });
 
-      // On successful login:
-      navigate('/dashboard'); // Change to your dashboard route
+    // try {
+    //   // Replace this with your actual API call
+    //   const response = await fetch('/api/auth/login', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       username: formData.username,
+    //       password: formData.password
+    //     })
+    //   });
 
-    } catch (error) {
-      console.error("Login error:", error);
-      setErrors({
-        username: "Invalid credentials",
-        password: "Invalid credentials"
-      });
-    }
+    //   const data = await response.json();
+
+    //   if (!response.ok) {
+    //     throw new Error(data.message || 'Login failed');
+    //   }
+
+    //   // Set user data in context
+    //   setCurrentUser({
+    //     id: data.user.id,
+    //     username: data.user.username,
+    //     token: data.token
+    //     // Add any other user data you need
+    //   });
+
+    //   // Redirect to dashboard or intended page
+    //   const from = location.state?.from?.pathname || '/';
+    //   navigate(from, { replace: true });
+
+    // } catch (error) {
+    //   console.error("Login error:", error);
+    //   setErrors({
+    //     username: "Invalid credentials",
+    //     password: "Invalid credentials"
+    //   });
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return (
@@ -173,9 +202,18 @@ const LoginForm = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300"
+              disabled={isLoading}
+              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Sign In
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </span>
+              ) : 'Sign In'}
             </button>
 
             {/* Register Link */}
@@ -195,7 +233,7 @@ const LoginForm = () => {
         </div>
       </div>
     </div>
-  ); 
+  );
 };
 
 export default LoginForm;
