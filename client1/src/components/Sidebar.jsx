@@ -5,7 +5,7 @@ import profileimg from '../assets/profile.jfif';
 import { LayoutContext } from "./layout/LayoutProvider";
 
 const Sidebar = () => {
-  const { sidebarOpen, setSidebarOpen, darkMode } = useContext(LayoutContext);
+  const { sidebarOpen, darkMode } = useContext(LayoutContext);
   
   return (
     <aside className={`
@@ -16,8 +16,9 @@ const Sidebar = () => {
       ${darkMode ? 'bg-gray-800' : 'bg-black'}
       text-white
       flex flex-col
-    `}>
-      {/* Profile Section */}
+    // `}>
+
+    {/*  Profile Section */}
       <div className="p-4 border-b border-gray-700 flex items-center space-x-3">
         <img 
           src={profileimg} 
@@ -43,7 +44,7 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <nav className="flex-1 p-2 overflow-y-auto">
         <NavItem 
-          to="/" 
+          to="" 
           icon={<FiHome />} 
           label="Dashboard" 
           sidebarOpen={sidebarOpen}

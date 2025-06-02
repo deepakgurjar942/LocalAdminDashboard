@@ -1,23 +1,19 @@
-// src/components/Navbar.jsx
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiMenu, FiX, FiSun, FiMoon, FiUser } from "react-icons/fi";
+import { FiSun, FiMoon, FiUser } from "react-icons/fi";
 import { MdMenuOpen } from "react-icons/md";
 import { LayoutContext } from "./layout/LayoutProvider";
 
 const Navbar = () => {
-  const { 
-    sidebarOpen, 
-    setSidebarOpen, 
-    darkMode, 
-    setDarkMode 
+  const {
+    sidebarOpen,
+    setSidebarOpen,
+    darkMode,
+    setDarkMode
   } = useContext(LayoutContext);
-  
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [profileOpen, setProfileOpen] = useState(false);
   const toggleProfile = () => setProfileOpen(!profileOpen);
-  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const toggleDarkMode = () => setDarkMode(!darkMode);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
